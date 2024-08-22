@@ -1,15 +1,109 @@
-import requests
+import csv
+import os
+import requests, json
 
-def execute():
-  requestUrl = "https://api-us01.central.sophos.com/endpoint/v1/endpoints/4a01e428-9dd7-4f1a-add5-63b0be2bd96a"
-  requestHeaders = {
-    "X-Tenant-ID": "be171127-e424-41c2-a301-bafc910c0b5b",
-    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjFIaXNtSjFSZmIwRWJqYjJ6dy01LVhTNlFiYXBaZWtOcVpsVU51TVdac2cifQ.eyJqdGkiOiJJRC4zOGFkMDIzMi00ZDNmLTQ3ZTQtODM1NS05MTk3MTUxMTEzZGMiLCJjbGllbnRfaWQiOiJiMzc0OWMxMS05ZDQwLTRlMDAtOGNlYy03MjYwZDg1MGRjODkiLCJleHAiOjE3MjQzMDUxNjYsImlhdCI6MTcyNDMwMTU2NiwicnRfaGFzaCI6IkVCa3RGNHo3TGlUTE9HWndxcHRsc2c9PSIsImF1dGhfdGltZSI6MTcyNDMwMTU2NiwiaXNzIjoiaHR0cHM6Ly9pZC5zb3Bob3MuY29tIiwidmVyIjoxLCJnaWQiOiJiZTE3MTEyNy1lNDI0LTQxYzItYTMwMS1iYWZjOTEwYzBiNWIiLCJhdWQiOiJhcGk6Ly9jZW50cmFsLXByb3Zpc2lvbmluZyIsImFwcF9pbmZvIjp7ImFjY291bnRUeXBlIjoiY3VzdG9tZXIifX0.sr88V9rlj3hSi2MG-iGvH5vbporaT-SXtGjpGZwdcixD8bovEDKAuSaywVgXE-ebKdUsL0SJiyiy2zhEMoWsIh3C_NY51IkbsOD-Ks7V8xpySK-CGN0HkXDZFMiQEbc7LQ9aY6dPHaLlugORYJtn9ZNgAQD5Dd8S8jmw37T6ovpmr6xMk0GTGVvf1tZv4oTEf7_SCcEeHWtYiIpYJd162A55Vy1YzNoRrxvrbiLDsD9E92K1zpeTSbLV0mfSEyTItGbSAoT0XR4fdJY0e4HmJ5huHC3cgN_eUkfETw3GAkf-QgWAeypMkKJOaBw9EbnWta6QWG2qAxxIV2XfuqfiRBMgHooKnjg_gCDlgeDpqFkKDRbSEa4mplGrSHEbmKVvZ2eDMdEcUq0-FVZ73mLbwXTPBqWGBS8BBGtmCk64IHzc1PEkjpVT9OfleLZ5Rm6C2gbpyaD-F6HtRx2cZWa3guf7QV7OCABMQcEhscbNB79-j2_G3OWt_Xt8dzJc761Xeab2WQJuRukLPqycbV6pCJ990W0pLPiDqVFDa_Xp6q0qMf5eamiX_i90LAPlxLkH5UF3VPilh_6mU7WQe9Mil34jRJ8mJPb4Gx2nJMv1u7CkZIy-FgKzX5pdGQ_uBeC7Qng-9187bON_DoaMSeasjziapJG8jY7ibBNWdvws27E"
-  }
 
-  response = requests.get(requestUrl, headers=requestHeaders)
+def get_token(client_id, client_secret):
+    token = ""
+    url = "https://id.sophos.com/api/v2/oauth2/token"
+    payload='grant_type=client_credentials&client_id='+client_id+'&client_secret='+client_secret+'&scope=token'
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer null'
+    }
 
-  print(response.text)
+    response = requests.request("POST", url, headers=headers, data=payload)
+    token_response = json.loads(response.text)
+  
+    if ('errorCode' in token_response):
+        if (token_response['errorCode'] != "success"):
+            os.system('cls')
+            print("\nError Message: " + f'{token_response}' + "\n")
+            input("\nIncorrect Credentials! Press Enter to try again...")
+            os.system('cls')
+        elif(token_response['errorCode'] == "success"): 
+            token = token_response["access_token"]
+    
+    else:
+     input("Issue with request, please please enter to try again!")
+     os.system('cls')
+      
+    return token;
 
-if __name__ == "__main__":
-  execute()
+def get_tenant(token):
+    url = "https://api.central.sophos.com/whoami/v1"
+
+    payload={}
+    headers = {
+      'Authorization': 'Bearer ' + token
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    
+    tenant = json.loads(response.text)
+    tenant_id = tenant["id"]
+    tenant_region = tenant["apiHosts"]["dataRegion"]
+    
+    print("\n\nSuccess! The Tenant ID is: " + f'{tenant_id}' + "\n")
+    
+    return [tenant_id,tenant_region];
+
+
+def get_endpoint_details(token, tenant_id, tenant_region, endpoint_id):
+    url = tenant_region + f'{"/endpoint/v1/endpoints/"+endpoint_id+"?view=full"}'
+    payload={}
+    files={}
+    headers = {
+        'X-Tenant-ID': tenant_id,
+        'Authorization': 'Bearer '+token
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload, files=files)
+    item = json.loads(response.text)
+
+    return [item];
+#===================================================================================
+
+# Input API details
+print("Please enter your source Central API credentials: \n")
+client_id = input("\nEnter Client ID: ")
+client_secret = input("\nEnter Client secret: ")
+
+# Request for authentication token using the provided client id and client secret.
+source_token = get_token(client_id, client_secret)
+
+if source_token != "":
+    source_tenant = get_tenant(source_token)
+    source_tenant_id = source_tenant[0]
+    source_tenant_region = source_tenant[1]
+
+    print("Retrieved authentication token: "+source_token+"\n")
+    print("Retrieved tenant id: "+source_tenant_id+"\n")
+    print("Retrieved tenant region: "+source_tenant_region+"\n")
+
+endpoint_id = "6c0eaf72-1950-4f01-8cfe-3017c78b3747"
+endpoint_details = get_endpoint_details(source_token, source_tenant_id, source_tenant_region, endpoint_id)
+print(endpoint_details[0])
+
+endpoint_details_jsond = json.dumps(endpoint_details)
+endpoint_details_jsonl = json.loads(endpoint_details_jsond)
+print("\n\n\n\n\nGETTING SPECIFIC JSON DETAILS\n")
+print(endpoint_details_jsonl[0]['group']['name'])
+print(endpoint_details_jsonl[0]['group']['id'])
+
+if ('group' in endpoint_details_jsonl[0]):
+    print("Group ID is: "+endpoint_details_jsonl[0]['group']['id'])
+else:
+    print("errrr")
+
+
+
+'''
+def pull_name():
+  firstname = "Aldrin"
+  lastname = "Tadeo"
+  return [firstname, lastname];
+
+full_name = pull_name()
+print (full_name[0]+" "+full_name[1])
+'''
