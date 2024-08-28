@@ -1,0 +1,5 @@
+System_ID,Hostname,Group_ID,GroupName,RemovalStatus
+06a09b47-159f-4012-9ec9-da0883cea6a3,COFFEE-ON-WIN,None,None,Skipped removal from group
+6c0eaf72-1950-4f01-8cfe-3017c78b3747,MELTON-R7-DESK,d068802a-77dc-44bd-a197-7113731f1169,Fairview,200: Successfully removed endpoint from group.
+da7165b9-3378-48f0-a374-706e3cc77be4,COFFEE-AT-HOME,532a2df7-a733-4751-bb77-80275acc9477,Subic,200: Successfully removed endpoint from group.
+2637f630-683b-4614-b5fc-39b8f811eebf,PREDATOR-ON-PLAY,None,None,Skipped removal from group
