@@ -1,0 +1,5 @@
+System_ID,Hostname,Status,LastSeenTime,Component1,Component2,Component3,OtherStats1,OtherStats2,OtherStats3,OtherStats4
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,Computer1,any,data,can,be,put,here,these,are,ignored
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,Computer2,any,data,can,be,put,here,these,are,ignored
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,Computer3,any,data,can,be,put,here,these,are,ignored
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx,Computer4,any,data,can,be,put,here,these,are,ignored

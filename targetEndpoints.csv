@@ -1,0 +1,5 @@
+System_ID,Hostname,Status,LastSeenTime,Component1,Component2,Component3,OtherStats1,OtherStats2,OtherStats3
+06a09b47-159f-4012-9ec9-da0883cea6a3,COFFEE-ON-WIN,good,06-26-2024,@{code=mtr; version=LTS 2024.0.0.3; status=installed} @{code=coreAgent; version=LTS 2024.0.0.3; status=installed} @{code=xdr; version=LTS 2024.0.0.3; status=installed} @{code=interceptX; version=LTS 2023.2.1.25; status=notInstalled},LTS 2023.2.1.25,LTS 2024.0.0.3,TRUE,Done,Deleted
+6c0eaf72-1950-4f01-8cfe-3017c78b3747,MELTON-R7-DESK,good,06-26-2024,@{code=deviceEncryption; version=LTS 2024.0.0.2; status=notInstalled} @{code=interceptX; version=LTS 2023.2.1.25; status=notInstalled} @{code=mtr; version=LTS 2024.0.0.3; status=installed} @{code=coreAgent; version=LTS 2024.0.0.3; status=installed} @{code=xdr; version=LTS 2024.0.0.3; status=installed} @{code=ztna; version=LTS 2024.0.0.3; status=notInstalled},LTS 2023.2.1.25,LTS 2024.0.0.3,TRUE,Done,Deleted
+da7165b9-3378-48f0-a374-706e3cc77be4,COFFEE-AT-HOME,computer,good,2024-08-27T12:54:22.305Z,Subic,,,,
+2637f630-683b-4614-b5fc-39b8f811eebf,PREDATOR-ON-PLAY,computer,good,2024-08-27T19:02:12.469Z,MigrateOut_Endpoints,,,,
